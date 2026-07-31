@@ -1,6 +1,41 @@
-.venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Virtualenv
+.venv/
+.venv_*/
+env/
+venv/
+
+# Environment variables
 .env
+.env.local
+.env.production
+
+# Django
+media/
+staticfiles/
 *.sqlite3
+db.sqlite3
+local_settings.py
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
