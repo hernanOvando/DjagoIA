@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if nota %}Editar{% else %}Nueva{% endif %} Nota — Block de Notas{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <div class="card form-card">
+    <div class="auth-header">
+      <svg viewBox="0 0 40 40" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+        <path d="M12 6h16a2 2 0 0 1 2 2v24a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
+        <line x1="16" y1="14" x2="26" y2="14" /><line x1="16" y1="20" x2="24" y2="20" /><line x1="16" y1="26" x2="22" y2="26" />
+      </svg>
+      <h1 class="auth-title">
+        {% if nota %}Editar{% else %}Nueva{% endif %} Nota
+      </h1>
+      <p class="auth-sub">
+        {% if nota %}Actualiza el contenido de la nota.{% else %}Escribe una nota para una persona.{% endif %}
+      </p>
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+      {% if not nota %}
+      {# Solo mostrar selector de persona al crear #}
+      {% if personas %}
+      <div class="form-group">
+        <label for="persona">Persona</label>
+        <select name="persona_id" id="persona" class="form-control" required>
+          <option value="" disabled selected>Selecciona una persona</option>
+          {% for p in personas %}
+          <option value="{{ p.id }}">{{ p.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% else %}
+      <div class="msg" style="background:oklch(92% 0.06 170);color:oklch(35% 0.1 170);padding:0.75rem 1rem;border-radius:calc(var(--radius) - 4px);margin-bottom:1rem;">
+        No hay personas registradas. <a href="{% url 'crear' %}" style="color:var(--accent);font-weight:600;">Crea una persona primero</a>.
+      </div>
+      {% endif %}
+      {% endif %}
+      <div class="form-group">
+        <label for="mensaje">Mensaje</label>
+        <textarea name="mensaje" id="mensaje" class="form-control" placeholder="Escribe aqu&iacute; tu nota…" required>{{ nota.mensaje|default:'' }}</textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'notas_listar' %}">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<link rel="stylesheet" href="{% static 'css/nota_form.css' %}">
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if persona %}Editar{% else %}Nueva{% endif %} Persona — Block de Notas{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <div class="card form-card">
+    <div class="auth-header">
+      <svg viewBox="0 0 40 40" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+        <circle cx="20" cy="14" r="6" />
+        <path d="M10 34c0-8 4.5-12 10-12s10 4 10 12" />
+      </svg>
+      <h1 class="auth-title">
+        {% if persona %}Editar{% else %}Nueva{% endif %} Persona
+      </h1>
+      <p class="auth-sub">
+        {% if persona %}Actualiza los datos de {{ persona.nombre }}.{% else %}Registra una nueva persona en tu block.{% endif %}
+      </p>
+    </div>
+
+    <form method="POST" onsubmit="return validarPassword()">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre" id="nombre" class="form-control" value="{{ persona.nombre|default:'' }}" placeholder="Nombre completo" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Correo electr&oacute;nico</label>
+        <input type="email" name="email" id="email" class="form-control" value="{{ persona.email|default:'' }}" placeholder="correo@ejemplo.com" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Contrase&ntilde;a</label>
+        <input type="password" name="password" id="password" class="form-control" value="{{ persona.password|default:'' }}" placeholder="{% if persona %}Dejar en blanco para mantener{% else %}Contrase&ntilde;a{% endif %}">
+      </div>
+      {% if not persona %}
+      <div class="form-group">
+        <label for="confirmar_password">Confirmar contrase&ntilde;a</label>
+        <input type="password" name="confirmar_password" id="confirmar_password" class="form-control" placeholder="Repite la contrase&ntilde;a">
+        <div id="password_error" class="msg error" style="display:none;margin-top:0.5rem;">Las contrase&ntilde;as no coinciden</div>
+      </div>
+      {% endif %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'listar' %}">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<link rel="stylesheet" href="{% static 'css/persona_form.css' %}">
+
+<script>
+  function validarPassword() {
+    {% if not persona %}
+    var pwd = document.getElementById("password").value;
+    var confirm = document.getElementById("confirmar_password").value;
+    if (pwd !== confirm) {
+      document.getElementById("password_error").style.display = "block";
+      return false;
+    }
+    {% endif %}
+    return true;
+  }
+</script>
+{% endblock %}

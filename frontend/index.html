@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Django - API Client</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: #f0f2f5; padding: 2rem; }
+        .container { max-width: 1000px; margin: auto; }
+        h1 { color: #1a1a2e; margin-bottom: 1.5rem; }
+        .card { background: #fff; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+        .card h2 { margin-bottom: 1rem; font-size: 1.2rem; color: #333; }
+        .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .col { flex: 1; min-width: 280px; }
+        .hidden { display: none; }
+        .msg { padding: .75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .msg.error { background: #fee; color: #c00; }
+        .msg.success { background: #efe; color: #080; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #eee; }
+        th { font-weight: 600; color: #555; }
+        .form-group { margin-bottom: .75rem; }
+        .form-group label { display: block; font-size: .85rem; color: #555; margin-bottom: .25rem; }
+        .form-group input, .form-group textarea { width: 100%; padding: .5rem; border: 1px solid #ddd; border-radius: 4px; font-size: .9rem; }
+        textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+        .btn { display: inline-block; padding: .5rem 1rem; border: none; border-radius: 4px; cursor: pointer; font-size: .85rem; }
+        .btn + .btn { margin-left: .5rem; }
+        .btn-primary { background: #4361ee; color: #fff; }
+        .btn-primary:hover { background: #3a56d4; }
+        .btn-danger { background: #e63946; color: #fff; }
+        .btn-danger:hover { background: #c1121f; }
+        .btn-sm { padding: .3rem .6rem; font-size: .8rem; }
+        .btn-outline { background: transparent; border: 1px solid #4361ee; color: #4361ee; }
+        .btn-outline:hover { background: #4361ee; color: #fff; }
+        .btn-logout { background: transparent; border: 1px solid #e63946; color: #e63946; }
+        .btn-logout:hover { background: #e63946; color: #fff; }
+        .btn-ghost { background: transparent; border: 1px solid #ddd; color: #666; }
+        .btn-ghost:hover { background: #f5f5f5; }
+        .actions { display: flex; gap: .4rem; }
+        .badge { display: inline-block; background: #e0e7ff; color: #4361ee; padding: .2rem .6rem; border-radius: 10px; font-size: .8rem; }
+        .empty { text-align: center; color: #999; padding: 2rem; }
+        .nav { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .nav .user { margin-left: auto; color: #555; font-size: .9rem; }
+        .inline-form { display: flex; gap: .5rem; margin-top: .75rem; }
+        .inline-form input { flex: 1; }
+        @media (max-width: 600px) { body { padding: 1rem; } .row { flex-direction: column; } }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <h1>App Django</h1>
+    <div id="msgBox" class="msg hidden"></div>
+    <div class="nav">
+        <button class="btn btn-ghost" data-section="personas">Personas</button>
+        <button class="btn btn-ghost hidden" data-section="notas" id="navNotas">Notas</button>
+        <span class="user" id="userInfo"></span>
+        <button class="btn btn-logout hidden" id="btnLogout">Cerrar sesión</button>
+        <button class="btn btn-primary" id="btnLogin">Iniciar sesión</button>
+    </div>
+    <div class="card hidden" id="loginCard">
+        <h2>Iniciar sesión</h2>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="correo@ejemplo.com"></div>
+        <div class="form-group"><label>Contraseña</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+        <button class="btn btn-primary" id="btnLoginSubmit">Entrar</button>
+        <button class="btn btn-ghost" id="btnLoginCancel">Cancelar</button>
+    </div>
+    <div id="sectionPersonas" class="card">
+        <h2>Personas</h2>
+        <div class="row">
+            <div class="col">
+                <h3 style="font-size:.95rem;margin-bottom:.5rem;color:#555;">Nueva persona</h3>
+                <div class="form-group"><label>Nombre</label><input type="text" id="pNombre" placeholder="Nombre"></div>
+                <div class="form-group"><label>Email</label><input type="email" id="pEmail" placeholder="correo@ejemplo.com"></div>
+                <div class="form-group"><label>Contraseña</label><input type="password" id="pPassword" placeholder="Contraseña"></div>
+                <button class="btn btn-primary" id="btnCrearPersona">Guardar</button>
+            </div>
+            <div class="col"><div id="personaList"></div></div>
+        </div>
+    </div>
+    <div class="card hidden" id="sectionNotas">
+        <h2>Mis Notas</h2>
+        <div class="inline-form">
+            <input type="text" id="nMensaje" placeholder="Escribe una nota...">
+            <button class="btn btn-primary" id="btnCrearNota">Agregar</button>
+        </div>
+        <div id="notaList" style="margin-top:1rem;"></div>
+    </div>
+</div>
+<script src="app.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const msgBox = $('msgBox');
+
+function showMsg(text, type = 'success') {
+    const t = typeof text === 'string' ? text : JSON.stringify(text);
+    msgBox.innerHTML = t;
+    msgBox.className = `msg ${type}`;
+    setTimeout(() => msgBox.classList.add('hidden'), 6000);
+}
+
+function showSection(name) {
+    document.querySelectorAll('[data-section]').forEach(b => b.classList.remove('badge'));
+    document.querySelector(`[data-section="${name}"]`)?.classList.add('badge');
+    $('sectionPersonas').classList.toggle('hidden', name !== 'personas');
+    $('sectionNotas').classList.toggle('hidden', name !== 'notas');
+}
+
+function setLoggedIn(ok, user = '') {
+    $('btnLogin').classList.toggle('hidden', ok);
+    $('btnLogout').classList.toggle('hidden', !ok);
+    $('navNotas').classList.toggle('hidden', !ok);
+    $('userInfo').textContent = ok ? '\u{1F464} ' + user : '';
+    if (ok) $('loginCard').classList.add('hidden');
+}
+
+$('btnLogin').onclick = () => $('loginCard').classList.toggle('hidden');
+$('btnLoginCancel').onclick = () => $('loginCard').classList.add('hidden');
+
+$('btnLoginSubmit').onclick = async () => {
+    const email = $('loginEmail').value.trim();
+    const password = $('loginPassword').value.trim();
+    if (!email || !password) return showMsg('Completa todos los campos', 'error');
+    try {
+        const res = await API.login(email, password);
+        showMsg(res.mensaje);
+        $('loginCard').classList.add('hidden');
+        $('loginEmail').value = '';
+        $('loginPassword').value = '';
+        setLoggedIn(true, res.nombre);
+        loadNotas();
+        showSection('notas');
+    } catch (e) {
+        showMsg(e.error || 'Error al iniciar sesión', 'error');
+    }
+};
+
+$('btnLogout').onclick = async () => {
+    try {
+        await API.logout();
+        setLoggedIn(false);
+        showSection('personas');
+        $('notaList').innerHTML = '';
+        showMsg('Sesión cerrada');
+    } catch { setLoggedIn(false); }
+};
+
+async function loadPersonas() {
+    try {
+        const personas = await API.getPersonas();
+        if (!personas.length) {
+            $('personaList').innerHTML = '<div class="empty">No hay personas registradas</div>';
+            return;
+        }
+        let html = '<table><thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th></th></tr></thead><tbody>';
+        for (const p of personas) {
+            html += `<tr><td>${p.id}</td><td>${esc(p.nombre)}</td><td>${esc(p.email)}</td>
+                <td class="actions"><button class="btn btn-danger btn-sm" onclick="deletePersona(${p.id})">Eliminar</button></td></tr>`;
+        }
+        html += '</tbody></table>';
+        $('personaList').innerHTML = html;
+    } catch (e) {
+        $('personaList').innerHTML = `<div class="empty">Error: ${e.error || 'No se pudieron cargar'}</div>`;
+    }
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+async function deletePersona(id) {
+    if (!confirm('¿Eliminar esta persona?')) return;
+    try { await API.deletePersona(id); showMsg('Persona eliminada'); loadPersonas(); }
+    catch (e) { showMsg(e.error || 'Error al eliminar', 'error'); }
+}
+
+$('btnCrearPersona').onclick = async () => {
+    const nombre = $('pNombre').value.trim();
+    const email = $('pEmail').value.trim();
+    const password = $('pPassword').value.trim();
+    if (!nombre || !email || !password) return showMsg('Completa todos los campos', 'error');
+    try {
+        await API.createPersona({ nombre, email, password });
+        showMsg('Persona creada exitosamente');
+        $('pNombre').value = ''; $('pEmail').value = ''; $('pPassword').value = '';
+        loadPersonas();
+    } catch (e) {
+        const msg = e.error || (e.nombre ? e.nombre.join(', ') : '') || (e.email ? e.email.join(', ') : '') || JSON.stringify(e);
+        showMsg(msg, 'error');
+    }
+};
+
+async function loadNotas() {
+    try {
+        const notas = await API.getNotas();
+        if (!notas.length) { $('notaList').innerHTML = '<div class="empty">No hay notas</div>'; return; }
+        let html = '';
+        for (const n of notas) {
+            html += `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid #eee;">
+                <div><div>${esc(n.mensaje)}</div><small style="color:#999;">${n.fecha ? new Date(n.fecha).toLocaleString() : ''}</small></div>
+                <button class="btn btn-danger btn-sm" onclick="deleteNota(${n.id})">Eliminar</button>
+            </div>`;
+        }
+        $('notaList').innerHTML = html;
+    } catch (e) { $('notaList').innerHTML = `<div class="empty">${e.error || 'Error al cargar notas'}</div>`; }
+}
+
+async function deleteNota(id) {
+    if (!confirm('¿Eliminar esta nota?')) return;
+    try { await API.deleteNota(id); showMsg('Nota eliminada'); loadNotas(); }
+    catch (e) { showMsg(e.error || 'Error al eliminar', 'error'); }
+}
+
+$('btnCrearNota').onclick = async () => {
+    const mensaje = $('nMensaje').value.trim();
+    if (!mensaje) return;
+    try { await API.createNota(mensaje); $('nMensaje').value = ''; loadNotas(); showMsg('Nota creada'); }
+    catch (e) { showMsg(e.error || 'Error al crear nota', 'error'); }
+};
+
+document.querySelectorAll('[data-section]').forEach(btn => {
+    btn.onclick = () => { showSection(btn.dataset.section); if (btn.dataset.section === 'personas') loadPersonas(); if (btn.dataset.section === 'notas') loadNotas(); };
+});
+
+(async () => {
+    await API.init();
+    try {
+        await API.getNotas();
+        setLoggedIn(true, 'Usuario');
+    } catch { setLoggedIn(false); }
+    loadPersonas();
+    showSection('personas');
+})();
+</script>
+</body>
+</html>

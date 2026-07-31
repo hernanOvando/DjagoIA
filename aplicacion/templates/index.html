@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Block de Notas — Tus notas, tus personas{% endblock %}
+
+{% block content %}
+<!-- ============================================
+     Hero — presentación principal
+     ============================================ -->
+<section class="hero" data-od-id="hero">
+  <div class="hero-text">
+    <span class="hero-badge">Blog de notas personal</span>
+    <h1 class="hero-title">Tus notas,<br>las personas que importan</h1>
+    <p class="hero-desc">
+      Un espacio donde cada nota cobra sentido al lado de una persona.
+      Registra, organiza y consulta todo lo que quieras recordar de quienes te rodean.
+    </p>
+    <div class="hero-actions">
+      <a href="{% url 'crear' %}" class="btn btn-primary">Crear cuenta gratis</a>
+      <a href="{% url 'login' %}" class="btn btn-outline">Ya tengo cuenta</a>
+    </div>
+  </div>
+  <div class="hero-illus">
+    <!-- Ilustración SVG: persona + notas -->
+    <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg" class="hero-svg">
+      <!-- Fondo decorativo -->
+      <circle cx="200" cy="170" r="150" fill="oklch(56% 0.12 170 / 8%)" />
+      <circle cx="200" cy="170" r="110" fill="oklch(56% 0.12 170 / 6%)" />
+      <!-- Persona (figura abstracta) -->
+      <circle cx="200" cy="130" r="32" fill="oklch(56% 0.12 170)" opacity="0.7" />
+      <path d="M160 240c0-30 18-52 40-52s40 22 40 52" stroke="oklch(20% 0.02 240)" stroke-width="2.5" fill="none" />
+      <!-- Notas volando -->
+      <g transform="translate(90, 100) rotate(-8)">
+        <rect x="0" y="0" width="56" height="70" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5" />
+        <line x1="12" y1="18" x2="44" y2="18" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+        <line x1="12" y1="30" x2="38" y2="30" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+        <line x1="12" y1="42" x2="44" y2="42" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+        <line x1="12" y1="54" x2="28" y2="54" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+      </g>
+      <g transform="translate(260, 80) rotate(10)">
+        <rect x="0" y="0" width="48" height="62" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5" />
+        <line x1="10" y1="16" x2="38" y2="16" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+        <line x1="10" y1="27" x2="32" y2="27" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+        <line x1="10" y1="38" x2="38" y2="38" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+        <line x1="10" y1="49" x2="24" y2="49" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+      </g>
+      <g transform="translate(170, 210) rotate(-5)">
+        <rect x="0" y="0" width="52" height="66" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5" />
+        <line x1="11" y1="17" x2="41" y2="17" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+        <line x1="11" y1="28" x2="35" y2="28" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+        <line x1="11" y1="39" x2="41" y2="39" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+        <line x1="11" y1="50" x2="24" y2="50" stroke="var(--border)" stroke-width="1.8" stroke-linecap="round" />
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================
+     Características
+     ============================================ -->
+<section class="features" data-od-id="features">
+  <div class="features-grid">
+    <article class="feature-card" data-od-id="feature-personas">
+      <div class="feature-icon">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="20" cy="14" r="6" /><path d="M10 34c0-8 4.5-12 10-12s10 4 10 12" />
+        </svg>
+      </div>
+      <h3 class="feature-title">Personas</h3>
+      <p class="feature-desc">Cada nota pertenece a alguien. Registra los datos de contacto y vincular notas a cada persona f&aacute;cilmente.</p>
+    </article>
+    <article class="feature-card" data-od-id="feature-notas">
+      <div class="feature-icon">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 6h16a2 2 0 0 1 2 2v24a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
+          <line x1="16" y1="14" x2="26" y2="14" /><line x1="16" y1="20" x2="24" y2="20" /><line x1="16" y1="26" x2="22" y2="26" />
+        </svg>
+      </div>
+      <h3 class="feature-title">Notas libres</h3>
+      <p class="feature-desc">Escribe lo que necesites: recordatorios, observaciones, fechas importantes. Sin l&iacute;mites ni plantillas r&iacute;gidas.</p>
+    </article>
+    <article class="feature-card" data-od-id="feature-seguridad">
+      <div class="feature-icon">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="8" y="14" width="24" height="18" rx="3" />
+          <path d="M14 14V10a6 6 0 0 1 12 0v4" /><circle cx="20" cy="24" r="2" />
+          <path d="M20 24v2" />
+        </svg>
+      </div>
+      <h3 class="feature-title">Privado y seguro</h3>
+      <p class="feature-desc">Cada persona tiene su propia cuenta. Tus notas son solo tuyas, protegidas con contrase&ntilde;a.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================
+     Cómo funciona
+     ============================================ -->
+<section class="steps" data-od-id="steps">
+  <h2 class="section-title">C&oacute;mo funciona</h2>
+  <div class="steps-grid">
+    <div class="step" data-od-id="step-1">
+      <span class="step-num">1</span>
+      <strong>Crea tu cuenta</strong>
+      <p>Reg&iacute;strate con tu nombre y correo electr&oacute;nico.</p>
+    </div>
+    <div class="step-arrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+    </div>
+    <div class="step" data-od-id="step-2">
+      <span class="step-num">2</span>
+      <strong>Registra personas</strong>
+      <p>A&ntilde;ade las personas sobre las que quieras dejar notas.</p>
+    </div>
+    <div class="step-arrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+    </div>
+    <div class="step" data-od-id="step-3">
+      <span class="step-num">3</span>
+      <strong>Escribe notas</strong>
+      <p>Asocia notas a cada persona y cons&uacute;ltalas cuando quieras.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     Llamado a la acción final
+     ============================================ -->
+<section class="cta" data-od-id="cta">
+  <div class="card cta-card">
+    <h2 class="cta-title">Empieza hoy</h2>
+    <p class="cta-desc">No necesitas m&aacute;s que un nombre y un correo. En segundos tendr&aacute;s tu block de notas listo.</p>
+    <a href="{% url 'crear' %}" class="btn btn-primary btn-lg">Crear cuenta gratis</a>
+  </div>
+</section>
+
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+  <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+    <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+
+{% endblock %}

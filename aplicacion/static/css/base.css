@@ -1,0 +1,291 @@
+/* ========================================
+   Sistema de diseño — Human / approachable
+   Paleta: base neutra + acento verde salvia
+   ======================================== */
+
+/* --- Tokens --- */
+:root {
+  --bg:      oklch(98% 0.004 240);
+  --surface: oklch(100% 0 0);
+  --fg:      oklch(20% 0.02 240);
+  --muted:   oklch(50% 0.018 240);
+  --border:  oklch(90% 0.006 240);
+  --accent:  oklch(56% 0.12 170);
+  --accent-hover: oklch(48% 0.14 170);
+  --radius: 14px;
+  --shadow: 0 2px 12px oklch(0% 0 0 / 6%);
+}
+
+/* --- Reset --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Navegación --- */
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  background: oklch(100% 0 0 / 92%);
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+.nav-brand {
+  font-family: 'Söhne', 'Avenir Next', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--fg);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-brand svg { width: 26px; height: 26px; }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-links a:hover { background: var(--border); color: var(--fg); }
+.nav-links a.active { color: var(--accent); background: oklch(56% 0.12 170 / 10%); }
+.nav-user {
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* --- Contenido principal --- */
+.main {
+  flex: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  width: 100%;
+}
+
+/* --- Tarjetas --- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+/* --- Encabezados de página --- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.page-header h1 {
+  font-family: 'Söhne', 'Avenir Next', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--fg);
+}
+
+/* --- Botones --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: var(--accent);
+  color: var(--surface);
+}
+.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 2px 8px oklch(56% 0.12 170 / 30%); }
+.btn-outline {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover { background: var(--border); color: var(--fg); }
+.btn-danger {
+  background: oklch(55% 0.18 25);
+  color: var(--surface);
+}
+.btn-danger:hover { background: oklch(48% 0.2 25); box-shadow: 0 2px 8px oklch(55% 0.18 25 / 30%); }
+.btn-sm { padding: 0.3rem 0.8rem; font-size: 0.8rem; }
+
+/* --- Formularios --- */
+.form-group { margin-bottom: 1.2rem; }
+.form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+  color: var(--fg);
+}
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 4px);
+  background: var(--surface);
+  color: var(--fg);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px oklch(56% 0.12 170 / 20%);
+}
+.form-control::placeholder { color: var(--muted); }
+textarea.form-control { resize: vertical; min-height: 120px; }
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.form-actions a {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+.form-actions a:hover { color: var(--fg); }
+
+/* --- Tablas --- */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+thead { background: oklch(98% 0.004 240); }
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: oklch(98% 0.004 240); }
+.actions { display: flex; gap: 0.4rem; align-items: center; }
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+}
+.empty svg { width: 64px; height: 64px; margin-bottom: 1rem; opacity: 0.4; }
+
+/* --- Mensajes (flash) --- */
+.messages { margin-bottom: 1.5rem; }
+.msg {
+  padding: 0.75rem 1rem;
+  border-radius: calc(var(--radius) - 4px);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.msg.success { background: oklch(92% 0.06 170); color: oklch(35% 0.1 170); }
+.msg.error { background: oklch(92% 0.08 25); color: oklch(40% 0.15 25); }
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+/* --- Responsive (media queries, no clamp) --- */
+/* --- Botón flotante WhatsApp --- */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 999;
+}
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5);
+}
+
+@media (max-width: 768px) {
+  .nav-inner { height: auto; flex-wrap: wrap; padding: 0.7rem 0; gap: 0.5rem; }
+  .nav-links { width: 100%; justify-content: center; }
+  .nav-links a { padding: 0.35rem 0.7rem; font-size: 0.8rem; }
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .page-header h1 { font-size: 1.3rem; }
+  .main { padding: 1.5rem 1rem; }
+  .card { padding: 1.25rem; }
+  th, td { padding: 0.5rem 0.7rem; }
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .form-actions a { text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .nav-links { gap: 0.15rem; }
+  .nav-links a { font-size: 0.75rem; padding: 0.25rem 0.5rem; }
+  .nav-brand { font-size: 1rem; }
+}

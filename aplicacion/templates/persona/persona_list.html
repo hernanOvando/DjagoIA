@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Personas — Block de Notas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Personas</h1>
+  <a href="{% url 'crear' %}" class="btn btn-primary">Nueva persona</a>
+</div>
+
+{% if personas %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for persona in personas %}
+      <tr>
+        <td>{{ persona.id }}</td>
+        <td>
+          <a href="{% url 'editar' persona.id %}" style="color:var(--fg);text-decoration:none;font-weight:600;">
+            {{ persona.nombre }}
+          </a>
+        </td>
+        <td>{{ persona.email }}</td>
+        <td>
+          <div class="actions">
+            <a href="{% url 'editar' persona.id %}" class="btn btn-outline btn-sm">Editar</a>
+            <form action="{% url 'eliminar' persona.id %}" method="POST" style="display:inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta persona y todas sus notas?')">Eliminar</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">
+  <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="22" r="8" />
+    <path d="M16 54c0-10 7-16 16-16s16 6 16 16" />
+  </svg>
+  <p>No hay personas registradas.</p>
+  <a href="{% url 'crear' %}" class="btn btn-primary" style="margin-top:1rem;">Crear primera persona</a>
+</div>
+{% endif %}
+{% endblock %}

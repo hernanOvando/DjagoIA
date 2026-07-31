@@ -1,0 +1,156 @@
+/* --- Hero --- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem 0 3rem;
+}
+.hero-text { flex: 1; }
+.hero-badge {
+  display: inline-block;
+  background: oklch(56% 0.12 170 / 12%);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.hero-title {
+  font-family: 'Söhne', 'Avenir Next', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--fg);
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+.hero-desc {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 460px;
+  margin-bottom: 1.8rem;
+  line-height: 1.6;
+}
+.hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.hero-illus { flex: 0 0 360px; }
+.hero-svg { width: 100%; height: auto; }
+.btn-lg { padding: 0.7rem 1.8rem; font-size: 1rem; }
+
+/* --- Características --- */
+.features { padding: 2rem 0; }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.feature-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: oklch(56% 0.12 170 / 10%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.feature-icon svg { width: 24px; height: 24px; }
+.feature-title {
+  font-family: 'Söhne', 'Avenir Next', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.feature-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+/* --- Pasos --- */
+.steps {
+  padding: 3rem 0;
+  text-align: center;
+}
+.section-title {
+  font-family: 'Söhne', 'Avenir Next', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+.steps-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+.step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  flex: 1;
+  max-width: 220px;
+}
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--surface);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.7rem;
+}
+.step strong { display: block; font-size: 1rem; margin-bottom: 0.3rem; }
+.step p { color: var(--muted); font-size: 0.85rem; }
+.step-arrow { flex-shrink: 0; color: var(--muted); }
+
+/* --- CTA --- */
+.cta { padding: 2rem 0 1rem; }
+.cta-card {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, oklch(56% 0.12 170 / 6%), oklch(56% 0.12 170 / 14%));
+  border-color: oklch(56% 0.12 170 / 20%);
+}
+.cta-title {
+  font-family: 'Söhne', 'Avenir Next', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.cta-desc {
+  color: var(--muted);
+  max-width: 420px;
+  margin: 0 auto 1.5rem;
+  font-size: 1rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .hero { flex-direction: column; text-align: center; padding: 1.5rem 0; }
+  .hero-desc { max-width: 100%; }
+  .hero-actions { justify-content: center; }
+  .hero-illus { flex: 0 0 auto; max-width: 280px; }
+  .hero-title { font-size: 2rem; }
+  .features-grid { grid-template-columns: 1fr; }
+  .steps-grid { flex-direction: column; }
+  .step-arrow { transform: rotate(90deg); }
+  .step { max-width: 100%; width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 1.6rem; }
+  .hero-illus { max-width: 200px; }
+}

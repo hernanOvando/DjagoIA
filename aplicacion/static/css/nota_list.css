@@ -1,0 +1,47 @@
+.notas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+.nota-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  transition: box-shadow 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.nota-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+.nota-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+}
+.nota-persona {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: oklch(56% 0.12 170 / 10%);
+  color: var(--accent);
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+}
+.nota-fecha { color: var(--muted); }
+.nota-mensaje {
+  flex: 1;
+  color: var(--fg);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+}
+.nota-card-actions {
+  display: flex;
+  gap: 0.4rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
