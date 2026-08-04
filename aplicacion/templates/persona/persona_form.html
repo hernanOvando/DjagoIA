@@ -31,7 +31,7 @@
       </div>
       <div class="form-group">
         <label for="password">Contrase&ntilde;a</label>
-        <input type="password" name="password" id="password" class="form-control" value="{{ persona.password|default:'' }}" placeholder="{% if persona %}Dejar en blanco para mantener{% else %}Contrase&ntilde;a{% endif %}">
+        <input type="password" name="password" id="password" class="form-control" placeholder="{% if persona %}Dejar en blanco para mantener{% else %}Contrase&ntilde;a{% endif %}">
       </div>
       {% if not persona %}
       <div class="form-group">

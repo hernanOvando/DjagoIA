@@ -94,7 +94,7 @@ const msgBox = $('msgBox');
 
 function showMsg(text, type = 'success') {
     const t = typeof text === 'string' ? text : JSON.stringify(text);
-    msgBox.innerHTML = t;
+    msgBox.textContent = t;
     msgBox.className = `msg ${type}`;
     setTimeout(() => msgBox.classList.add('hidden'), 6000);
 }

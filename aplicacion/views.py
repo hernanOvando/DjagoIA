@@ -22,7 +22,9 @@ def logout(request):
 
 
 def listar(request):
-    personas = persona_controller.listar()
+    if not request.session.get("persona_id"):
+        return redirect("login")
+    personas = persona_controller.listar(request)
     return render(request, "persona/persona_list.html", {"personas": personas})
 
 def index(request):
@@ -35,6 +37,8 @@ def crear(request):
 
 
 def editar(request, id):
+    if not request.session.get("persona_id"):
+        return redirect("login")
     persona = persona_controller.actualizar(request, id)
     if persona is None:
         return redirect("listar")
@@ -44,6 +48,8 @@ def editar(request, id):
 
 
 def eliminar(request, id):
+    if not request.session.get("persona_id"):
+        return redirect("login")
     persona_controller.eliminar(request, id)
     return redirect("listar")
 

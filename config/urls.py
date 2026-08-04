@@ -16,21 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.views.static import serve
-from django.http import FileResponse
-import os
-
-def frontend(request, path=''):
-    file_path = settings.BASE_DIR / 'frontend' / (path or 'index.html')
-    if not file_path.exists() or not file_path.is_file():
-        file_path = settings.BASE_DIR / 'frontend' / 'index.html'
-    return FileResponse(open(file_path, 'rb'))
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('aplicacion.urls')),
-    path('api/', include('api.urls')),
-    path('app/', frontend, name='frontend'),
-    path('app/<path:path>', frontend),
 ]

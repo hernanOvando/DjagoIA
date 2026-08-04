@@ -4,6 +4,15 @@ from django.middleware.csrf import get_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.throttling import SimpleRateThrottle
+
+
+class LoginRateThrottle(SimpleRateThrottle):
+    scope = "login"
+
+    def get_cache_key(self, request, view):
+        ident = self.get_ident(request)
+        return self.cache_format % {"scope": self.scope, "ident": ident}
 
 from aplicacion.services.PersonaService import PersonaService
 from aplicacion.services.NotaService import NotaService
@@ -16,52 +25,65 @@ class CSRFToken(APIView):
 
 
 class PersonaList(APIView):
-    # GET /api/personas/ - lista todas las personas
+    # GET /api/personas/ - perfil de la persona autenticada
     def get(self, request):
-        service = PersonaService()
-        personas = service.listar_todos()
-        serializer = PersonaSerializer(personas, many=True)
-        return Response(serializer.data)
+        persona_id = request.session.get("persona_id")
+        if not persona_id:
+            return Response({"error": "No autenticado"}, status=status.HTTP_401_UNAUTHORIZED)
+        persona = PersonaService().obtener_por_id(persona_id)
+        serializer = PersonaSerializer(persona)
+        return Response([serializer.data] if persona else [])
 
-    # POST /api/personas/ - crea una nueva persona
+    # POST /api/personas/ - registra una nueva persona (auto-login)
     def post(self, request):
         serializer = PersonaSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            persona = serializer.save()
+            request.session["persona_id"] = persona.id
+            request.session["persona_nombre"] = persona.nombre
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PersonaDetail(APIView):
-    # GET /api/personas/<id>/ - obtiene una persona por su ID
-    def get(self, request, id):
-        service = PersonaService()
-        persona = service.obtener_por_id(id)
-        if not persona:
-            return Response({"error": "Persona no encontrada"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = PersonaSerializer(persona)
-        return Response(serializer.data)
+    def _permitida(self, request, persona):
+        session_id = request.session.get("persona_id")
+        return bool(session_id and persona and persona.id == session_id)
 
-    # PUT /api/personas/<id>/ - actualiza una persona existente
-    def put(self, request, id):
-        service = PersonaService()
-        persona = service.obtener_por_id(id)
+    # GET /api/personas/<id>/ - obtiene una persona solo si es la propia cuenta
+    def get(self, request, id):
+        persona = PersonaService().obtener_por_id(id)
         if not persona:
             return Response({"error": "Persona no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+        if not self._permitida(request, persona):
+            return Response({"error": "No autenticado o sin permisos"}, status=status.HTTP_403_FORBIDDEN)
+        return Response(PersonaSerializer(persona).data)
+
+    # PUT /api/personas/<id>/ - actualiza la propia cuenta
+    def put(self, request, id):
+        persona = PersonaService().obtener_por_id(id)
+        if not persona:
+            return Response({"error": "Persona no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+        if not self._permitida(request, persona):
+            return Response({"error": "No autenticado o sin permisos"}, status=status.HTTP_403_FORBIDDEN)
         serializer = PersonaSerializer(persona, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            if request.session.get("persona_id") == persona.id:
+                request.session["persona_nombre"] = serializer.data.get("nombre")
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # DELETE /api/personas/<id>/ - elimina una persona
+    # DELETE /api/personas/<id>/ - elimina la propia cuenta
     def delete(self, request, id):
-        service = PersonaService()
-        persona = service.obtener_por_id(id)
+        persona = PersonaService().obtener_por_id(id)
         if not persona:
             return Response({"error": "Persona no encontrada"}, status=status.HTTP_404_NOT_FOUND)
-        service.eliminar(id)
-        return Response({"mensaje": "Persona eliminada exitosamente"}, status=status.HTTP_200_OK)
+        if not self._permitida(request, persona):
+            return Response({"error": "No autenticado o sin permisos"}, status=status.HTTP_403_FORBIDDEN)
+        PersonaService().eliminar(id)
+        request.session.flush()
+        return Response({"mensaje": "Cuenta eliminada exitosamente"}, status=status.HTTP_200_OK)
 
 
 class NotaList(APIView):
@@ -137,6 +159,8 @@ class NotaDetail(APIView):
 
 
 class Login(APIView):
+    throttle_classes = [LoginRateThrottle]
+
     # POST /api/login/ - inicia sesión con email y contraseña
     def post(self, request):
         email = request.data.get("email")
